@@ -4,9 +4,15 @@ class Book extends Component {
     state = {
         option: ''
     };
+
     componentDidMount() {
-        this.setState({ option: this.props.book.shelf });
+        if(this.props.book.shelf) {
+            this.setState({ option: thids.propds.book.shelf });
+        } else {
+            this.setState({ option: 'none' });
+        }
     }
+
     handleSelectChange = async e => {
         const updatedOption = e.target.value;
         this.props.updateShelf(this.props.book, updatedOption);
@@ -18,18 +24,25 @@ class Book extends Component {
                 <div className='book-top'>
                     <div
                         className='book-cover'
-                        style={{
-                            width: 128,
-                            height: 188,
-                            backgroundImage: `url(${this.props.book.imageLinks.thumbnail})`
-                        }}
-                    />
+                        style={
+                            !!this.props.book.imageLinks ?
+                            {
+                                width: 128,
+                                height: 188,
+                                backgroundImage: `url(${this.props.book.imageLinks.thumbnail})`
+                            } : {
+                                width: 128,
+                                height: 188,
+                                backgroundColor: 'grey'
+                            }
+                        }
+                        />
                     <div className='book-shelf-changer'>
                         <select
-                            value={this.props.book.shelf}
+                            value={this.state.option}
                             onChange={this.handleSelectChange}
                         >
-                            <option value='none' disabled>
+                            <option disabled>
                                 Move to...
               </option>
                             <option value='currentlyReading'>Currently Reading</option>
@@ -41,9 +54,9 @@ class Book extends Component {
                 </div>
                 <div className='book-title'>{this.props.book.title}</div>
                 <div className='book-authors'>
-                    {this.props.book.authors.map((author, i) => {
+                    {this.props.book.authors ? this.props.book.authors.map((author, i) => {
                         return <div key={i}>{author}</div>;
-                    })}
+                    }) : ''}
                 </div>
             </div>
         );
