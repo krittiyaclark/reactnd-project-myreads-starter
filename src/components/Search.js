@@ -23,7 +23,7 @@ class Search extends Component {
         }
         this.setState({ searchTerm: e.target.value });
         const currentBooks = this.state.currentBooks.slice();
-        const search = await BooksAPI.search(e.target.value);
+        let search = await BooksAPI.search(e.target.value);
         if(!!search && !search.error){
             search.map(searchedBooks => {
                 return currentBooks.filter(book => book.id === searchedBooks.id).map(book => {
@@ -70,7 +70,7 @@ class Search extends Component {
                         {this.state.searchedBooks ? this.state.searchedBooks.map((book, i) => {
                             return (
                                 <li key={i}>
-                                    <Book book={book} updateShelf={this.updateShelf} />
+                                    <Book book={book} shelf={book.shelf} updateShelf={this.updateShelf} />
                                 </li>
                             );
                         }) : ''}

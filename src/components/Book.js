@@ -2,16 +2,8 @@ import React, { Component } from 'react';
 
 class Book extends Component {
     state = {
-        option: ''
+        option: this.props.shelf
     };
-
-    componentDidMount() {
-        if(this.props.book.shelf) {
-            this.setState({ option: this.props.book.shelf });
-        } else {
-            this.setState({ option: 'none' });
-        }
-    }
 
     handleSelectChange = async e => {
         const updatedOption = e.target.value;
@@ -39,7 +31,7 @@ class Book extends Component {
                         />
                     <div className='book-shelf-changer'>
                         <select
-                            value={this.state.option}
+                            value={this.props.shelf || 'none'}
                             onChange={this.handleSelectChange}
                         >
                             <option disabled>

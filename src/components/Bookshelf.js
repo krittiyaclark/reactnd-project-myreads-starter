@@ -11,7 +11,7 @@ const Bookshelf = props => {
                         ? props.books.map((book, i) => {
                             return (
                                 <li key={i}>
-                                    <Book book={book} updateShelf={props.updateShelf} />
+                                    <Book book={book} shelf={book.shelf} updateShelf={props.updateShelf} />
                                 </li>
                             );
                         })
