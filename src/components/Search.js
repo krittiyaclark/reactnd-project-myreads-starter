@@ -67,19 +67,18 @@ class Search extends Component {
                 </div>
                 <div className='search-books-results'>
                     <ol className='books-grid'>
-                        {this.state.searchedBooks ? this.state.searchedBooks.map((book, i) => {
+                        {!!this.state.searchedBooks ? this.state.searchedBooks.map((book, i) => {
                             return (
                                 <li key={i}>
                                     <Book book={book} shelf={book.shelf} updateShelf={this.updateShelf} />
                                 </li>
                             );
                         }) : ''}
-                            
-                            })}
                     </ol>
                 </div>
             </div>
         );
     }
 }
+
 export default Search;
