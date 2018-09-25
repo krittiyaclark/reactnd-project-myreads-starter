@@ -7,7 +7,7 @@ class Book extends Component {
 
     componentDidMount() {
         if(this.props.book.shelf) {
-            this.setState({ option: thids.propds.book.shelf });
+            this.setState({ option: this.props.book.shelf });
         } else {
             this.setState({ option: 'none' });
         }

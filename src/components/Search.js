@@ -1,14 +1,48 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Book from './Book';
+import * as BooksAPI from '../BooksAPI';
 
 class Search extends Component {
     state = {
-        searchTerm: ''
+        searchTerm: '',
+        currentBooks: [],
+        searchedBooks: []
     };
-    handleOnChange = e => {
+
+    async componentDidMount(){
+        const currentBooks = await BooksAPI.getAll();
+        this.setState({
+            currentBooks: currentBooks
+        });
+    }
+
+    handleOnChange = async e => {
+        if(e.target.value === ''){
+            return this.setState({ searchTerm: e.target.value });
+        }
         this.setState({ searchTerm: e.target.value });
+        const currentBooks = this.state.currentBooks.slice();
+        const search = await BooksAPI.search(e.target.value);
+        if(!!search && !search.error){
+            search.map(searchedBooks => {
+                return currentBooks.filter(book => book.id === searchedBooks.id).map(book => {
+                    searchedBooks.shelf = book.shelf;
+                    return BooksAPI.update(searchedBooks, book.shelf);
+                })
+            })
+            this.setState({ searchedBooks: search });
+        } else {
+            // clear out searched books
+            this.setState({ searchedBooks: [] });
+        }
     };
+
+    updateShelf = async (book, shelf) => {
+        await BooksAPI.update(book, shelf);
+        BooksAPI.getAll();
+    };
+
     render() {
         return (
             <div className='search-books'>
@@ -33,23 +67,14 @@ class Search extends Component {
                 </div>
                 <div className='search-books-results'>
                     <ol className='books-grid'>
-                        {this.props.books
-                            .filter(
-                                book =>
-                                    (book.authors.filter(
-                                        author => author.indexOf(this.state.searchTerm) >= 0
-                                    ).length > 0 ||
-                                        book.title
-                                            .toLowerCase()
-                                            .indexOf(this.state.searchTerm.toLowerCase()) >= 0) &&
-                                    this.state.searchTerm !== ''
-                            )
-                            .map((book, i) => {
-                                return (
-                                    <li key={i}>
-                                        <Book book={book} updateShelf={this.props.updateShelf} />
-                                    </li>
-                                );
+                        {this.state.searchedBooks ? this.state.searchedBooks.map((book, i) => {
+                            return (
+                                <li key={i}>
+                                    <Book book={book} updateShelf={this.updateShelf} />
+                                </li>
+                            );
+                        }) : ''}
+                            
                             })}
                     </ol>
                 </div>
