@@ -11,30 +11,24 @@ class Search extends Component {
     };
 
     async componentDidMount(){
-        // const currentBooks = await BooksAPI.getAll();
+        const currentBooks = await BooksAPI.getAll();
         this.setState({
-            currentBooks: [],
-            searchedBooks: []
+            currentBooks: currentBooks
         });
     }
 
     handleOnChange = async e => {
         if(e.target.value === ''){
-            return this.setState({ 
-                searchTerm: e.target.value,
-                searchTerm: '', 
-                searchedBooks: [],
-                currentBooks: []
-            });
+            return this.setState({ searchTerm: e.target.value });
         }
         this.setState({ searchTerm: e.target.value });
         const currentBooks = this.state.currentBooks.slice();
         let search = await BooksAPI.search(e.target.value);
         if(!!search && !search.error){
-            search.map(searchedBook => {
-                return currentBooks.filter(book => book.id === searchedBook.id).map(book => {
-                    searchedBook.shelf = book.shelf;
-                    return BooksAPI.update(searchedBook, book.shelf);
+            search.map(searchedBooks => {
+                return currentBooks.filter(book => book.id === searchedBooks.id).map(book => {
+                    searchedBooks.shelf = book.shelf;
+                    return BooksAPI.update(searchedBooks, book.shelf);
                 })
             })
             this.setState({ searchedBooks: search });

@@ -14,7 +14,7 @@ To get started developing right away:
 
 ## Features
 
-* The main page shows 3 shelves for books "Currently Reading", "Want To    Read" and "Read"
+* The main page shows 3 shelves for books "Currently Reading", "Want To Read" and "Read"
 * Search functionality by author and title
 
 ## License
